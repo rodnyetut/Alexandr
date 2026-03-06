@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Светлая память</title>
+    <title>Светлая память • Александр</title>
     <style>
         * {
             margin: 0;
@@ -116,13 +116,17 @@
 
         .memorial-quote {
             text-align: center;
-            font-size: 1.2rem;
-            color: #b8aa9e;
+            font-size: 1.8rem;
+            color: #dacbbd;
             font-style: italic;
-            margin: 0.5rem 0 2rem 0;
-            padding: 0.5rem;
-            border-top: 1px dashed #5f5248;
-            border-bottom: 1px dashed #5f5248;
+            margin: 1.5rem 0 2rem 0;
+            padding: 1rem;
+            border-top: 2px solid #5f5248;
+            border-bottom: 2px solid #5f5248;
+            letter-spacing: 2px;
+            word-break: break-word;
+            font-weight: 300;
+            line-height: 1.4;
         }
 
         .candle-section {
@@ -190,7 +194,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .comment-item {
@@ -220,51 +224,6 @@
             text-align: right;
         }
 
-        .admin-toggle-note {
-            text-align: right;
-            font-size: 0.8rem;
-            color: #6b6159;
-            margin-top: 0.5rem;
-            cursor: pointer;
-            text-decoration: underline dotted;
-        }
-
-        .admin-form {
-            margin-top: 2rem;
-            background: #2b2723;
-            padding: 1.5rem;
-            border-radius: 20px;
-            border: 1px solid #6a5e54;
-            display: none;
-        }
-
-        .admin-form.visible {
-            display: block;
-        }
-
-        .admin-form input,
-        .admin-form textarea {
-            width: 100%;
-            background: #3a3530;
-            border: 1px solid #7a6b5e;
-            padding: 0.8rem 1rem;
-            border-radius: 12px;
-            color: #eee;
-            font-family: 'Georgia', serif;
-            margin-bottom: 1rem;
-        }
-
-        .admin-form button {
-            background: #5c5045;
-            border: none;
-            color: white;
-            padding: 0.6rem 1.8rem;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-right: 1rem;
-        }
-
         .qr-float {
             position: fixed;
             bottom: 30px;
@@ -272,7 +231,7 @@
             background: #2b2b2b;
             border: 1px solid #7a6e64;
             border-radius: 24px;
-            padding: 1.2rem 1.2rem 1.2rem 1.2rem;
+            padding: 1.2rem 1.2rem 1.5rem 1.2rem;
             text-align: center;
             box-shadow: 0 15px 30px rgba(0,0,0,0.8);
             backdrop-filter: blur(4px);
@@ -297,12 +256,20 @@
 
         .qr-code-canvas {
             display: block;
-            margin: 0 auto;
+            margin: 0 auto 12px auto;
             background: white;
             padding: 8px;
             border-radius: 16px;
             width: 150px;
             height: 150px;
+            pointer-events: none; /* чтобы клик проходил через canvas на весь блок */
+        }
+
+        .download-hint {
+            font-size: 0.8rem;
+            color: #9a8b7f;
+            margin-top: 5px;
+            opacity: 0.8;
         }
 
         /* Эффект дымка */
@@ -332,6 +299,17 @@
         }
 
         @media (max-width: 600px) {
+            .memorial-header h1 {
+                font-size: 2.2rem;
+            }
+            .memorial-header h1::before,
+            .memorial-header h1::after {
+                margin: 0 6px;
+                font-size: 1.6rem;
+            }
+            .memorial-quote {
+                font-size: 1.3rem;
+            }
             .qr-float {
                 position: static;
                 margin: 30px auto 0 auto;
@@ -361,12 +339,12 @@
         <div class="time-unit"><span class="value" id="hours">00</span><span class="label">часов</span></div>
         <div class="time-unit"><span class="value" id="minutes">00</span><span class="label">минут</span></div>
         <div class="time-unit"><span class="value" id="seconds">00</span><span class="label">секунд</span></div>
-       <div class="memorial-quote">
-        Пришёл,замри среди камней - здесь время всех сильней
-    </div>
     </div>
     
-   
+    <!-- Новая фраза с именем Александр -->
+    <div class="memorial-quote">
+        Александр здесь. Замри. Помолчи.
+    </div>
 
     <div class="candle-section">
         <button class="candle-button" id="candleBtn">
@@ -375,28 +353,23 @@
         <div class="candle-count" id="candleCounter">Всего свечей: 0</div>
     </div>
 
+    <!-- Комментарии теперь только для чтения (без админки) -->
     <div class="comments-section">
         <div class="comments-title">Слова памяти</div>
         <div class="comment-list" id="commentList"></div>
-        <div class="admin-toggle-note" id="adminToggle">⚙️ модерация (для создателя)</div>
-        <div class="admin-form" id="adminForm">
-            <h3>Добавить комментарий</h3>
-            <input type="text" id="adminAuthor" placeholder="Имя" value="Друг">
-            <textarea id="adminText" placeholder="Текст комментария" rows="3"></textarea>
-            <div>
-                <button id="adminAddBtn">➕ Добавить</button>
-                <button id="adminClearBtn" style="background:#4a3f38;">🗑️ Очистить все</button>
-            </div>
+        <div style="text-align:center; color:#6b6159; margin-top:1rem; font-size:0.9rem;">
+            • светлая память •
         </div>
     </div>
 
     <footer>— с любовью и скорбью —</footer>
 </div>
 
-<!-- Плавающий QR (без кнопки скачивания, только с надписью "помянуть ушедшего") -->
-<div class="qr-float" id="smokeTrigger">
+<!-- Плавающий QR: при клике скачивается cod.png + дымок -->
+<div class="qr-float" id="qrBlock">
     <p>🕯️ помянуть ушедшего</p>
     <canvas id="qrCanvas" class="qr-code-canvas" width="150" height="150"></canvas>
+    <div class="download-hint">нажми — скачать QR</div>
 </div>
 
 <script>
@@ -423,7 +396,7 @@
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // ========== СЧЁТЧИК СВЕЧЕЙ (глобальный) ==========
+        // ========== СЧЁТЧИК СВЕЧЕЙ (глобальный в localStorage) ==========
         let candleCount = localStorage.getItem('globalCandles') ? parseInt(localStorage.getItem('globalCandles')) : 0;
         const candleSpan = document.getElementById('candleCounter');
         candleSpan.innerText = `Всего свечей: ${candleCount}`;
@@ -433,13 +406,14 @@
             candleSpan.innerText = `Всего свечей: ${candleCount}`;
         });
 
-        // ========== КОММЕНТАРИИ ==========
+        // ========== КОММЕНТАРИИ (только чтение, без возможности добавить) ==========
         const commentList = document.getElementById('commentList');
-        let comments = JSON.parse(localStorage.getItem('memorialComments')) || [
-            { author: 'Сергей', text: 'Светлая память...', date: new Date(2026, 0, 27, 10, 30).toISOString() },
-            { author: 'Анна', text: 'Царствие Небесное.', date: new Date(2026, 0, 28, 15, 45).toISOString() }
+        // Фиксированные комментарии (можно изменить или дописать свои)
+        let comments = [
+            { author: 'Сергей', text: 'Светлая память, Саша...', date: '2026-01-27T10:30:00' },
+            { author: 'Анна', text: 'Царствие Небесное. Помним.', date: '2026-01-28T15:45:00' },
+            { author: 'Дмитрий', text: 'Земля пухом, друг.', date: '2026-01-29T09:12:00' }
         ];
-        localStorage.setItem('memorialComments', JSON.stringify(comments));
 
         function escapeHtml(str) {
             return String(str).replace(/[&<>]/g, function(m) {
@@ -458,10 +432,6 @@
 
         function renderComments() {
             commentList.innerHTML = '';
-            if (comments.length === 0) {
-                commentList.innerHTML = '<div style="text-align:center; color:#786e66; padding:1rem;">Пока нет записей.</div>';
-                return;
-            }
             comments.sort((a, b) => new Date(b.date) - new Date(a.date));
             comments.forEach(c => {
                 const div = document.createElement('div');
@@ -472,35 +442,7 @@
         }
         renderComments();
 
-        // Админка
-        const adminToggle = document.getElementById('adminToggle');
-        const adminForm = document.getElementById('adminForm');
-        const adminAuthor = document.getElementById('adminAuthor');
-        const adminText = document.getElementById('adminText');
-        const adminAddBtn = document.getElementById('adminAddBtn');
-        const adminClearBtn = document.getElementById('adminClearBtn');
-
-        adminToggle.addEventListener('click', () => adminForm.classList.toggle('visible'));
-
-        adminAddBtn.addEventListener('click', () => {
-            const author = adminAuthor.value.trim() || 'Друг';
-            const text = adminText.value.trim();
-            if (!text) return alert('Введите текст');
-            comments.push({ author, text, date: new Date().toISOString() });
-            localStorage.setItem('memorialComments', JSON.stringify(comments));
-            renderComments();
-            adminText.value = '';
-        });
-
-        adminClearBtn.addEventListener('click', () => {
-            if (confirm('Удалить все комментарии?')) {
-                comments = [];
-                localStorage.setItem('memorialComments', JSON.stringify(comments));
-                renderComments();
-            }
-        });
-
-        // ========== QR-КОД (без кнопки скачивания) ==========
+        // ========== QR-КОД ==========
         const qrCanvas = document.getElementById('qrCanvas');
         const siteUrl = window.location.href;
 
@@ -543,29 +485,37 @@
         loadQRCodeLibrary(generateQR);
         window.addEventListener('load', () => setTimeout(() => { if (window.QRCode) generateQR(); }, 300));
 
-        // ========== ЭФФЕКТ ДЫМА ПРИ КЛИКЕ НА QR-БЛОК ==========
-        const smokeTrigger = document.getElementById('smokeTrigger');
+        // ========== ЭФФЕКТ ДЫМА + СКАЧИВАНИЕ cod.png ПРИ КЛИКЕ ==========
+        const qrBlock = document.getElementById('qrBlock');
         
         function createSmoke(x, y) {
             const smoke = document.createElement('div');
             smoke.className = 'smoke-effect';
-            smoke.innerHTML = '🕯️'; // символ дымка/свечи, можно заменить на "💨" или "☁️"
+            smoke.innerHTML = '🕯️';
             smoke.style.left = (x - 30) + 'px';
             smoke.style.top = (y - 30) + 'px';
             document.body.appendChild(smoke);
             setTimeout(() => smoke.remove(), 2500);
         }
 
-        smokeTrigger.addEventListener('click', function(e) {
+        qrBlock.addEventListener('click', function(e) {
+            // 1. Эффект дыма
             const rect = this.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            // Создаём несколько дымков для эффекта
             for (let i = 0; i < 3; i++) {
                 setTimeout(() => {
                     createSmoke(centerX + (Math.random() - 0.5) * 40, centerY - 20);
                 }, i * 150);
             }
+
+            // 2. Скачивание QR-кода как cod.png
+            // Небольшая задержка, чтобы дым начался, но скачивание сразу
+            const dataURL = qrCanvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'cod.png';
+            link.href = dataURL;
+            link.click();
         });
 
     })();
