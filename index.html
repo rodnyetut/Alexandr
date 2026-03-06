@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Светлая память</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1e1e1e;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: #d4d4d4;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .memorial-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(3px);
+            border: 1px solid #3e3e3e;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px #4a4a4a inset;
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .memorial-header {
+            text-align: center;
+            border-bottom: 2px solid #4f4f4f;
+            padding-bottom: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .memorial-header h1 {
+            font-size: 3.2rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: #e0e0e0;
+            text-shadow: 0 2px 5px #0a0a0a;
+        }
+
+        .memorial-header h1::before,
+        .memorial-header h1::after {
+            content: "✞";
+            display: inline-block;
+            margin: 0 20px;
+            font-size: 2.2rem;
+            color: #7a6a5c;
+            opacity: 0.6;
+        }
+
+        .dates {
+            font-size: 1.4rem;
+            color: #b0a8a0;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .dates strong {
+            color: #c9b6a8;
+            font-weight: 500;
+        }
+
+        .time-counter {
+            background: #26221f;
+            border: 1px solid #5e534b;
+            border-radius: 60px;
+            padding: 1.2rem 1.8rem;
+            margin: 2rem 0 0.8rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            color: #ccc3bc;
+            box-shadow: inset 0 2px 5px #0f0f0f;
+        }
+
+        .time-unit {
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .time-unit .value {
+            display: block;
+            font-size: 2.4rem;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            color: #e6d5c4;
+            letter-spacing: 3px;
+            background: #1c1c1c;
+            padding: 0.2rem 0.3rem;
+            border-radius: 12px;
+            border: 1px solid #5a4e46;
+            margin-bottom: 5px;
+        }
+
+        .time-unit .label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #9b8f85;
+        }
+
+        .memorial-quote {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #b8aa9e;
+            font-style: italic;
+            margin: 0.5rem 0 2rem 0;
+            padding: 0.5rem;
+            border-top: 1px dashed #5f5248;
+            border-bottom: 1px dashed #5f5248;
+        }
+
+        .candle-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0 2.5rem 0;
+        }
+
+        .candle-button {
+            background: #3b352f;
+            border: 1px solid #7a6a5c;
+            color: #f2e9e0;
+            font-size: 1.5rem;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .candle-button:hover {
+            background: #5c4e42;
+            border-color: #b8a28e;
+            color: #ffffff;
+            box-shadow: 0 8px 25px rgba(120, 80, 50, 0.3);
+            transform: scale(1.02);
+        }
+
+        .candle-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 4px #ffb347);
+        }
+
+        .candle-count {
+            margin-top: 1rem;
+            font-size: 1.4rem;
+            color: #e6d5c4;
+            border-top: 1px dashed #5b4e45;
+            padding-top: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .comments-section {
+            margin: 3rem 0 1.5rem 0;
+            border-top: 1px solid #4b4038;
+            padding-top: 2rem;
+        }
+
+        .comments-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: #cfc1b4;
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .comment-item {
+            background: #2b2723;
+            padding: 1.2rem 1.8rem;
+            border-radius: 18px;
+            border-left: 4px solid #8e7b6b;
+            box-shadow: 0 2px 8px #151515;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #e3cfbe;
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+        }
+
+        .comment-text {
+            color: #c8bcb2;
+            font-style: italic;
+        }
+
+        .comment-date {
+            font-size: 0.8rem;
+            color: #877a70;
+            margin-top: 0.6rem;
+            text-align: right;
+        }
+
+        .admin-toggle-note {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #6b6159;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            text-decoration: underline dotted;
+        }
+
+        .admin-form {
+            margin-top: 2rem;
+            background: #2b2723;
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #6a5e54;
+            display: none;
+        }
+
+        .admin-form.visible {
+            display: block;
+        }
+
+        .admin-form input,
+        .admin-form textarea {
+            width: 100%;
+            background: #3a3530;
+            border: 1px solid #7a6b5e;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            color: #eee;
+            font-family: 'Georgia', serif;
+            margin-bottom: 1rem;
+        }
+
+        .admin-form button {
+            background: #5c5045;
+            border: none;
+            color: white;
+            padding: 0.6rem 1.8rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .qr-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2b2b2b;
+            border: 1px solid #7a6e64;
+            border-radius: 24px;
+            padding: 1.2rem 1.2rem 1.2rem 1.2rem;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            width: 200px;
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .qr-float:hover {
+            transform: scale(1.02);
+        }
+
+        .qr-float p {
+            color: #cfc3b8;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #5b4f45;
+            padding-bottom: 8px;
+        }
+
+        .qr-code-canvas {
+            display: block;
+            margin: 0 auto;
+            background: white;
+            padding: 8px;
+            border-radius: 16px;
+            width: 150px;
+            height: 150px;
+        }
+
+        /* Эффект дымка */
+        .smoke-effect {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 4rem;
+            opacity: 0.6;
+            filter: blur(8px);
+            color: #ddd;
+            text-shadow: 0 0 20px #aaa;
+            animation: smokeRise 2.5s ease-out forwards;
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translate(0, 0) scale(0.8);
+                opacity: 0.6;
+                filter: blur(6px);
+            }
+            100% {
+                transform: translate(10px, -150px) scale(2.2);
+                opacity: 0;
+                filter: blur(20px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .qr-float {
+                position: static;
+                margin: 30px auto 0 auto;
+            }
+        }
+
+        footer {
+            text-align: center;
+            color: #706b66;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="memorial-container">
+    <div class="memorial-header">
+        <h1>ВЕЧНАЯ ПАМЯТЬ</h1>
+        <div class="dates">
+            <strong>26 января 2026</strong> — день преставления ко Господу
+        </div>
+    </div>
+
+    <div class="time-counter" id="timer">
+        <div class="time-unit"><span class="value" id="days">00</span><span class="label">дней</span></div>
+        <div class="time-unit"><span class="value" id="hours">00</span><span class="label">часов</span></div>
+        <div class="time-unit"><span class="value" id="minutes">00</span><span class="label">минут</span></div>
+        <div class="time-unit"><span class="value" id="seconds">00</span><span class="label">секунд</span></div>
+       <div class="memorial-quote">
+        Пришёл,замри среди камней - здесь время всех сильней
+    </div>
+    </div>
+    
+   
+
+    <div class="candle-section">
+        <button class="candle-button" id="candleBtn">
+            <span class="candle-icon">🕯️</span> Поставить свечу
+        </button>
+        <div class="candle-count" id="candleCounter">Всего свечей: 0</div>
+    </div>
+
+    <div class="comments-section">
+        <div class="comments-title">Слова памяти</div>
+        <div class="comment-list" id="commentList"></div>
+        <div class="admin-toggle-note" id="adminToggle">⚙️ модерация (для создателя)</div>
+        <div class="admin-form" id="adminForm">
+            <h3>Добавить комментарий</h3>
+            <input type="text" id="adminAuthor" placeholder="Имя" value="Друг">
+            <textarea id="adminText" placeholder="Текст комментария" rows="3"></textarea>
+            <div>
+                <button id="adminAddBtn">➕ Добавить</button>
+                <button id="adminClearBtn" style="background:#4a3f38;">🗑️ Очистить все</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>— с любовью и скорбью —</footer>
+</div>
+
+<!-- Плавающий QR (без кнопки скачивания, только с надписью "помянуть ушедшего") -->
+<div class="qr-float" id="smokeTrigger">
+    <p>🕯️ помянуть ушедшего</p>
+    <canvas id="qrCanvas" class="qr-code-canvas" width="150" height="150"></canvas>
+</div>
+
+<script>
+    (function() {
+        // ========== СЧЁТЧИК ВРЕМЕНИ (26 января 2026) ==========
+        const deathDate = new Date(2026, 0, 26, 0, 0, 0);
+
+        function updateTimer() {
+            const now = new Date();
+            const diffMs = now - deathDate;
+            if (diffMs < 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+            const totalSeconds = Math.floor(diffMs / 1000);
+            document.getElementById('days').textContent = Math.floor(totalSeconds / 86400).toString().padStart(2, '0');
+            document.getElementById('hours').textContent = Math.floor((totalSeconds % 86400) / 3600).toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = (totalSeconds % 60).toString().padStart(2, '0');
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // ========== СЧЁТЧИК СВЕЧЕЙ (глобальный) ==========
+        let candleCount = localStorage.getItem('globalCandles') ? parseInt(localStorage.getItem('globalCandles')) : 0;
+        const candleSpan = document.getElementById('candleCounter');
+        candleSpan.innerText = `Всего свечей: ${candleCount}`;
+        document.getElementById('candleBtn').addEventListener('click', function() {
+            candleCount++;
+            localStorage.setItem('globalCandles', candleCount);
+            candleSpan.innerText = `Всего свечей: ${candleCount}`;
+        });
+
+        // ========== КОММЕНТАРИИ ==========
+        const commentList = document.getElementById('commentList');
+        let comments = JSON.parse(localStorage.getItem('memorialComments')) || [
+            { author: 'Сергей', text: 'Светлая память...', date: new Date(2026, 0, 27, 10, 30).toISOString() },
+            { author: 'Анна', text: 'Царствие Небесное.', date: new Date(2026, 0, 28, 15, 45).toISOString() }
+        ];
+        localStorage.setItem('memorialComments', JSON.stringify(comments));
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        }
+
+        function renderComments() {
+            commentList.innerHTML = '';
+            if (comments.length === 0) {
+                commentList.innerHTML = '<div style="text-align:center; color:#786e66; padding:1rem;">Пока нет записей.</div>';
+                return;
+            }
+            comments.sort((a, b) => new Date(b.date) - new Date(a.date));
+            comments.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'comment-item';
+                div.innerHTML = `<div class="comment-author">${escapeHtml(c.author)}</div><div class="comment-text">${escapeHtml(c.text)}</div><div class="comment-date">${formatDate(c.date)}</div>`;
+                commentList.appendChild(div);
+            });
+        }
+        renderComments();
+
+        // Админка
+        const adminToggle = document.getElementById('adminToggle');
+        const adminForm = document.getElementById('adminForm');
+        const adminAuthor = document.getElementById('adminAuthor');
+        const adminText = document.getElementById('adminText');
+        const adminAddBtn = document.getElementById('adminAddBtn');
+        const adminClearBtn = document.getElementById('adminClearBtn');
+
+        adminToggle.addEventListener('click', () => adminForm.classList.toggle('visible'));
+
+        adminAddBtn.addEventListener('click', () => {
+            const author = adminAuthor.value.trim() || 'Друг';
+            const text = adminText.value.trim();
+            if (!text) return alert('Введите текст');
+            comments.push({ author, text, date: new Date().toISOString() });
+            localStorage.setItem('memorialComments', JSON.stringify(comments));
+            renderComments();
+            adminText.value = '';
+        });
+
+        adminClearBtn.addEventListener('click', () => {
+            if (confirm('Удалить все комментарии?')) {
+                comments = [];
+                localStorage.setItem('memorialComments', JSON.stringify(comments));
+                renderComments();
+            }
+        });
+
+        // ========== QR-КОД (без кнопки скачивания) ==========
+        const qrCanvas = document.getElementById('qrCanvas');
+        const siteUrl = window.location.href;
+
+        function loadQRCodeLibrary(callback) {
+            if (window.QRCode) { callback(); return; }
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';
+            script.onload = callback;
+            document.head.appendChild(script);
+        }
+
+        function generateQR() {
+            if (!window.QRCode) {
+                const ctx = qrCanvas.getContext('2d');
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, 150, 150);
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 12px serif';
+                ctx.fillText('QR', 50, 80);
+                return;
+            }
+            try {
+                const qr = window.QRCode(0, 'H');
+                qr.addData(siteUrl);
+                qr.make();
+                const size = qr.getModuleCount();
+                const cellSize = 150 / size;
+                const ctx = qrCanvas.getContext('2d');
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, 150, 150);
+                ctx.fillStyle = '#1f1f1f';
+                for (let row = 0; row < size; row++) {
+                    for (let col = 0; col < size; col++) {
+                        if (qr.isDark(row, col)) ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                    }
+                }
+            } catch (e) { console.warn('QR error', e); }
+        }
+
+        loadQRCodeLibrary(generateQR);
+        window.addEventListener('load', () => setTimeout(() => { if (window.QRCode) generateQR(); }, 300));
+
+        // ========== ЭФФЕКТ ДЫМА ПРИ КЛИКЕ НА QR-БЛОК ==========
+        const smokeTrigger = document.getElementById('smokeTrigger');
+        
+        function createSmoke(x, y) {
+            const smoke = document.createElement('div');
+            smoke.className = 'smoke-effect';
+            smoke.innerHTML = '🕯️'; // символ дымка/свечи, можно заменить на "💨" или "☁️"
+            smoke.style.left = (x - 30) + 'px';
+            smoke.style.top = (y - 30) + 'px';
+            document.body.appendChild(smoke);
+            setTimeout(() => smoke.remove(), 2500);
+        }
+
+        smokeTrigger.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            // Создаём несколько дымков для эффекта
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    createSmoke(centerX + (Math.random() - 0.5) * 40, centerY - 20);
+                }, i * 150);
+            }
+        });
+
+    })();
+</script>
+</body>
+</html>
