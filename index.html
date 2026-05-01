@@ -52,14 +52,10 @@
             text-shadow: 0 2px 5px #0a0a0a;
         }
 
+        /* убираем кресты по бокам для чистоты */
         .memorial-header h1::before,
         .memorial-header h1::after {
-            content: "✞";
-            display: inline-block;
-            margin: 0 20px;
-            font-size: 2.2rem;
-            color: #7a6a5c;
-            opacity: 0.6;
+            content: none;
         }
 
         .dates {
@@ -74,7 +70,7 @@
             font-weight: 500;
         }
 
-        /* ФОТО С ПОЛНЫМ ИМЕНЕМ */
+        /* ВИДЕО-ПОРТРЕТ без рамок плеера */
         .photo-memorial {
             display: flex;
             justify-content: center;
@@ -91,7 +87,8 @@
             width: fit-content;
         }
 
-        .portrait-img {
+        /* видео стилизовано под фото: без элементов управления, бесшовно */
+        .portrait-video {
             width: 210px;
             height: 210px;
             object-fit: cover;
@@ -101,14 +98,15 @@
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
             border: 1px solid #b7a58e;
             transition: transform 0.4s ease, filter 0.3s;
+            background-color: #2a241f; /* фон на время загрузки */
         }
 
-        .portrait-frame:hover .portrait-img {
+        .portrait-frame:hover .portrait-video {
             transform: scale(1.01);
             filter: brightness(1.02);
         }
 
-        /* Полное имя под фото */
+        /* Полное имя под видео */
         .fullname-title {
             text-align: center;
             margin-top: 16px;
@@ -122,6 +120,11 @@
             font-weight: 500;
             text-shadow: 0 1px 2px #0a0a0a;
             word-break: keep-all;
+            background: linear-gradient(135deg, #f3e3d4, #cfbcaa);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: #e2cfbd;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
         .fullname-main span {
@@ -138,15 +141,6 @@
             border-top: 1px solid rgba(139, 115, 95, 0.4);
             display: inline-block;
             padding-top: 6px;
-        }
-
-        .photo-caption {
-            text-align: center;
-            margin-top: 8px;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            color: #cfbeae;
-            font-style: normal;
         }
 
         .time-counter {
@@ -367,11 +361,6 @@
             .memorial-header h1 {
                 font-size: 2.2rem;
             }
-            .memorial-header h1::before,
-            .memorial-header h1::after {
-                margin: 0 6px;
-                font-size: 1.6rem;
-            }
             .memorial-quote {
                 font-size: 1.6rem;
             }
@@ -379,7 +368,7 @@
                 position: static;
                 margin: 30px auto 0 auto;
             }
-            .portrait-img {
+            .portrait-video {
                 width: 160px;
                 height: 160px;
             }
@@ -398,6 +387,7 @@
             font-size: 0.85rem;
         }
 
+        /* заглушка если видео не загрузится */
         .fallback-icon {
             background: #3e3630;
             width: 210px;
@@ -408,15 +398,6 @@
             justify-content: center;
             font-size: 4rem;
             color: #b7a07e;
-        }
-
-        /* легкое свечение для имени */
-        .fullname-main {
-            background: linear-gradient(135deg, #f3e3d4, #cfbcaa);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: #e2cfbd;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -430,12 +411,14 @@
         </div>
     </div>
 
-    <!-- ФОТО АЛЕКСАНДРА СЕРГЕЕВИЧА АРМЕЕВА + полное ФИО -->
+    <!-- ВИДЕО-ПОРТРЕТ АЛЕКСАНДРА СЕРГЕЕВИЧА (Sanya.mp4) зациклено, без элементов управления -->
     <div class="photo-memorial">
         <div class="portrait-frame">
-            <img class="portrait-img" src="photo.jpg" alt="Александр Сергеевич Армеев, светлая память" 
-                 onerror="this.onerror=null; this.parentElement.querySelector('.img-container') ? null : (this.style.display='none', this.parentElement.insertAdjacentHTML('afterbegin','<div class=\'fallback-icon\'>🕊️</div>'));">
-            <!-- подпись с полным именем -->
+            <video class="portrait-video" id="memorialVideo" autoplay loop muted playsinline disablePictureInPicture>
+                <source src="Sanya.mp4" type="video/mp4">
+                <!-- Текст, если видео не поддерживается -->
+                Ваш браузер не поддерживает видео, но светлая память об Александре Сергеевиче живёт в наших сердцах.
+            </video>
             <div class="fullname-title">
                 <div class="fullname-main">Александр Сергеевич<br><span>Армеев</span></div>
                 <div class="small-epitaph">вечная слава и блаженная память</div>
@@ -450,7 +433,6 @@
         <div class="time-unit"><span class="value" id="seconds">00</span><span class="label">секунд</span></div>
     </div>
     
-    <!-- Надпись: Вдохни • Замри • Помолчи - душевная пауза -->
     <div class="memorial-quote">
       Вдохни • Замри • Помолчи
     </div>
@@ -462,7 +444,6 @@
         <div class="candle-count" id="candleCounter">Всего свечей: 0</div>
     </div>
 
-    <!-- Комментарии (слова памяти) -->
     <div class="comments-section">
         <div class="comments-title">Слова памяти об Александре Сергеевиче</div>
         <div class="comment-list" id="commentList"></div>
@@ -474,7 +455,7 @@
     <footer>— с любовью и скорбью —</footer>
 </div>
 
-<!-- QR-блок: ссылка и дань -->
+<!-- QR-блок -->
 <div class="qr-float" id="qrBlock">
     <p>🕯️ помянуть ушедшего</p>
     <canvas id="qrCanvas" class="qr-code-canvas" width="160" height="160"></canvas>
@@ -484,7 +465,7 @@
 
 <script>
     (function() {
-        // ========== 1. СЧЁТЧИК ВРЕМЕНИ (26 января 2026) — вечный отсчёт ==========
+        // ========== 1. СЧЁТЧИК ВРЕМЕНИ (26 января 2026) ==========
         const deathDate = new Date(2026, 0, 26, 0, 0, 0);
 
         function updateTimer() {
@@ -506,7 +487,7 @@
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // ========== 2. СВЕЧИ (общий счётчик) ==========
+        // ========== 2. СВЕЧИ ==========
         let candleCount = localStorage.getItem('globalCandles') ? parseInt(localStorage.getItem('globalCandles')) : 0;
         const candleSpan = document.getElementById('candleCounter');
         candleSpan.innerText = `Всего свечей: ${candleCount}`;
@@ -514,13 +495,12 @@
             candleCount++;
             localStorage.setItem('globalCandles', candleCount);
             candleSpan.innerText = `Всего свечей: ${candleCount}`;
-            // лёгкая тактильная анимация
             const btn = document.getElementById('candleBtn');
             btn.style.transform = 'scale(0.97)';
             setTimeout(() => { btn.style.transform = ''; }, 130);
         });
 
-        // ========== 3. КОММЕНТАРИИ (тёплые слова) ==========
+        // ========== 3. КОММЕНТАРИИ ==========
         const commentList = document.getElementById('commentList');
         const comments = [
             { author: '✞ Родные', text: 'Светлая, светлая память, Саша... Ты навсегда в наших сердцах.', date: '2026-02-27T10:30:00' },
@@ -556,7 +536,7 @@
         }
         renderComments();
 
-        // ========== 4. QR-КОД (ссылка на страницу) ==========
+        // ========== 4. QR-КОД ==========
         const canvas = document.getElementById('qrCanvas');
         const siteUrl = window.location.href;
 
@@ -602,7 +582,7 @@
         
         generateQRCode();
 
-        // ========== 5. КЛИК ПО QR: дым + яндекс карты (координаты вечного упокоения) ==========
+        // ========== 5. КЛИК ПО QR: дым + открытие карты ==========
         const qrBlock = document.getElementById('qrBlock');
         
         function createSmoke(x, y) {
@@ -616,7 +596,6 @@
         }
 
         qrBlock.addEventListener('click', function(e) {
-            // дымок как символ зажжённой свечи
             const rect = this.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -626,44 +605,70 @@
                 }, i * 150);
             }
             
-            // Открытие яндекс карт с местом захоронения (Вологда, точные координаты)
             setTimeout(() => {
                 window.open(`https://yandex.ru/maps/?pt=39.925217,59.154985&z=18&l=map`, '_blank');
             }, 260);
         });
         
-        // Деликатное появление фото и коррекция fallback
-        const portraitElement = document.querySelector('.portrait-img');
-        if (portraitElement && portraitElement.tagName === 'IMG') {
-            portraitElement.style.opacity = '0';
-            portraitElement.style.transition = 'opacity 0.9s ease';
-            portraitElement.onload = () => { portraitElement.style.opacity = '1'; };
-            if (portraitElement.complete) portraitElement.style.opacity = '1';
-            else portraitElement.style.opacity = '1';
-            // защита от контекстного меню
-            portraitElement.addEventListener('contextmenu', (e) => e.preventDefault());
+        // ========== 6. Управление видео: зацикливание, защита от элементов управления ==========
+        const video = document.getElementById('memorialVideo');
+        if (video) {
+            // Убедимся, что видео воспроизводится автоматически и без контроля
+            video.setAttribute('autoplay', '');
+            video.setAttribute('loop', '');
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            video.removeAttribute('controls');
+            // Отключаем контекстное меню (правый клик) на видео
+            video.addEventListener('contextmenu', (e) => e.preventDefault());
+            // Убираем возможные стандартные всплывающие подсказки
+            video.style.pointerEvents = 'none';  // делаем видео некликабельным, чтобы ни за что не зацепиться
+            // Но при желании можно вернуть, если нужна пауза, но по условию - не должно быть элементов управления.
+            // Видео просто живёт в рамке как "живая фотография"
+            
+            // Проблема: если видео не может загрузиться (отсутствует файл), покажем иконку-заглушку, подобно фото
+            video.addEventListener('error', function() {
+                const parent = this.closest('.portrait-frame');
+                if(parent && !parent.querySelector('.fallback-icon')) {
+                    this.style.display = 'none';
+                    const fallbackDiv = document.createElement('div');
+                    fallbackDiv.className = 'fallback-icon';
+                    fallbackDiv.innerText = '🕊️';
+                    fallbackDiv.style.margin = '0 auto';
+                    parent.insertBefore(fallbackDiv, parent.firstChild);
+                }
+            });
+            
+            // Также если видео загрузилось, убедимся что оно запущено (некоторые браузеры требуют взаимодействия, но muted autoplay работает)
+            const startVideo = () => {
+                video.play().catch(e => console.log("Автовоспроизведение заблокировано, но видео остаётся визуальным элементом"));
+            };
+            startVideo();
+            // На случай, если видео поставили на паузу внезапно (хотя controls нет, но маловероятно)
+            video.addEventListener('pause', () => {
+                if(video.src && video.paused && !video.ended) video.play();
+            });
         }
         
-        // Если фото отсутствует — fallback уже сработает через onerror, дополнительно сохраняем имя
-        const checkImage = setInterval(() => {
-            const img = document.querySelector('.portrait-img');
-            if(img && img.naturalWidth === 0 && img.src.includes('photo.jpg') && !img.hasAttribute('data-fallback-shown')) {
-                img.setAttribute('data-fallback-shown', 'true');
-                const parent = img.closest('.portrait-frame');
-                if(parent && !parent.querySelector('.fallback-icon')) {
-                    img.style.display = 'none';
-                    const fallBackDiv = document.createElement('div');
-                    fallBackDiv.className = 'fallback-icon';
-                    fallBackDiv.innerText = '🕊️';
-                    fallBackDiv.style.margin = '0 auto';
-                    parent.insertBefore(fallBackDiv, parent.firstChild);
-                }
-            } else if(img && img.naturalWidth > 0) {
-                clearInterval(checkImage);
+        // Небольшая защита: скрываем все стандартные контролы через CSS (доп. страховка)
+        const style = document.createElement('style');
+        style.textContent = `
+            video::-webkit-media-controls {
+                display: none !important;
             }
-        }, 300);
-        setTimeout(() => clearInterval(checkImage), 3000);
+            video::-webkit-media-controls-enclosure {
+                display: none !important;
+            }
+            video::-webkit-media-controls-panel {
+                display: none !important;
+            }
+            video::-webkit-media-controls-overlay-play-button {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
     })();
 </script>
 </body>
 </html>
+
